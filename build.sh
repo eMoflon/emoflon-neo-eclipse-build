@@ -216,9 +216,9 @@ setup_emoflon_headless_local_updatesite
 log "Clean-up Eclipse folder and extract downloaded archive."
 rm -rf ./eclipse/*
 if [[ "$OS" = "linux" ]]; then
-	tar -xzf eclipse-modeling-$VERSION-R-linux-gtk-x86_64.tar.gz
+	tar -xzf $ARCHIVE_FILE_LINUX
 elif [[ "$OS" = "windows" ]]; then
-	unzip -qq -o eclipse-modeling-$VERSION-R-win32-x86_64.zip
+	unzip -qq -o $ARCHIVE_FILE_WINDOWS
 elif [[ "$OS" = "macos" ]]; then
 	7z x $ARCHIVE_FILE_MACOS
 	# Rename folder because "Eclipse" is inconsistent
