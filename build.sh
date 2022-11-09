@@ -96,7 +96,8 @@ install_packages () {
 	$ECLIPSE_BIN_PATH -nosplash \
 			-application org.eclipse.equinox.p2.director \
 			-repository "$1" \
-			-installIU "$(parse_package_list $2)"
+			-installIU "$(parse_package_list $2)" \
+	| grep -v 'DEBUG'
 }
 
 # Displays the given input including "=> " on the console.
