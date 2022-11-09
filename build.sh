@@ -174,7 +174,7 @@ install_global_eclipse_settings () {
 # Remove all configured update sites
 remove_update_sites () {
 	log "Remove all update sites."
-	UPDATE_SITE_CONFIG_PATH="$ECLIPSE_BASE_PATH/p2/org.eclipse.equinox.p2.engine/profileRegistry/epp.package.modeling.profile/.data/.settings"
+	UPDATE_SITE_CONFIG_PATH="$ECLIPSE_BASE_PATH/p2/org.eclipse.equinox.p2.engine/profileRegistry/epp.package.dsl.profile/.data/.settings"
 	UPDATE_SITE_METADATA="org.eclipse.equinox.p2.metadata.repository.prefs"
 	UPDATE_SITE_ARTIFACT="org.eclipse.equinox.p2.artifact.repository.prefs"
 
