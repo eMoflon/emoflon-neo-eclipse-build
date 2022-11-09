@@ -39,7 +39,7 @@ if [[ ! -f "./$ECLIPSE_ARCHIVE.zip" ]] || [[ "$FORCE_DOWNLOAD" = "1" ]]; then
         | grep "\"name\"\: \"v" \
         | cut -d : -f 2,3 \
         | tr -d \" |tr -d ,)
-	log "Downloading latest eMoflon Eclipse archive from Github.\nRelease:$TAG"
+	log "Downloading latest eMoflon::IBeX Eclipse archive from Github.\nRelease:$TAG"
 	curl -s $API_URL \
         | grep "$ECLIPSE_ARCHIVE.*zip" \
         | cut -d : -f 2,3 \
