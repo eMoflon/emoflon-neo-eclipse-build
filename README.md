@@ -10,13 +10,10 @@ This repository is used to automatically build an Eclipse [eMoflon::Neo](https:/
 | Eclipse eMoflon dev      | Linux   |                    | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 | Eclipse eMoflon user CI  | Linux   | :heavy_check_mark: |                      |                    |                     |
 | Eclipse eMoflon dev CI   | Linux   |                    |                      |                    |                     |
-| Eclipse eMoflon dev HiPE | Linux   |                    | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 | Eclipse eMoflon user     | Windows | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 | Eclipse eMoflon dev      | Windows |                    | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
-| Eclipse eMoflon dev HiPE | Windows |                    | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 | Eclipse eMoflon user     | macOS   | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 | Eclipse eMoflon dev      | macOS   |                    | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
-| Eclipse eMoflon dev HiPE | macOS   |                    | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 
 
 **Additional packages** are installed for every non-CI build.
