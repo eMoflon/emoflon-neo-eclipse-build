@@ -26,14 +26,14 @@ fi
 #
 
 VERSION=$VERSION # version comes from the CI env
-ARCHIVE_FILE_LINUX="eclipse-modeling-$VERSION-R-linux-gtk-x86_64.tar.gz"
-ARCHIVE_FILE_WINDOWS="eclipse-modeling-$VERSION-R-win32-x86_64.zip"
-ARCHIVE_FILE_MACOS="eclipse-modeling-$VERSION-R-macosx-cocoa-x86_64.dmg"
+ARCHIVE_FILE_LINUX="eclipse-dsl-$VERSION-R-linux-gtk-x86_64.tar.gz"
+ARCHIVE_FILE_WINDOWS="eclipse-dsl-$VERSION-R-win32-x86_64.zip"
+ARCHIVE_FILE_MACOS="eclipse-dsl-$VERSION-R-macosx-cocoa-x86_64.dmg"
 OUTPUT_FILE_PREFIX_LINUX="eclipse-emoflon-linux"
 OUTPUT_FILE_PREFIX_WINDOWS="eclipse-emoflon-windows"
 OUTOUT_FILE_PREFIX_MACOS="eclipse-emoflon-macos"
 MIRROR="https://ftp.fau.de"
-UPDATESITES="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/,https://hallvard.github.io/plantuml/,https://hipe-devops.github.io/HiPE-Updatesite/hipe.updatesite/,https://www.kermeta.org/k2/update,https://emoflon.org/emoflon-ibex-updatesite/snapshot/updatesite/,https://www.genuitec.com/updates/devstyle/ci/,https://download.eclipse.org/releases/$VERSION,https://www.codetogether.com/updates/ci/,http://update.eclemma.org/,https://pmd.github.io/pmd-eclipse-plugin-p2-site/,https://checkstyle.org/eclipse-cs-update-site/,https://spotbugs.github.io/eclipse/"
+UPDATESITES="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/,https://hallvard.github.io/plantuml/,https://www.kermeta.org/k2/update,https://www.genuitec.com/updates/devstyle/ci/,https://download.eclipse.org/releases/$VERSION,https://www.codetogether.com/updates/ci/,http://update.eclemma.org/,https://pmd.github.io/pmd-eclipse-plugin-p2-site/,https://checkstyle.org/eclipse-cs-update-site/,https://spotbugs.github.io/eclipse/,https://emoflon.org/emoflon-neo-updatesite/snapshot/"
 EMOFLON_HEADLESS_SRC="https://api.github.com/repos/eMoflon/emoflon-headless/releases/latest"
 
 # Import plug-in:
@@ -42,7 +42,7 @@ IMPORT_PLUGIN_FILENAME="com.seeq.eclipse.importprojects_$IMPORT_PLUGIN_VERSION.j
 IMPORT_PLUGIN_SRC="https://api.github.com/repos/maxkratz/eclipse-import-projects-plugin/releases/tags/v$IMPORT_PLUGIN_VERSION"
 
 # Array with the order to install the plugins with.
-ORDER_LINUX=("xtext" "plantuml" "hipe" "kermeta" "misc" "emoflon-headless" "emoflon" "theme" "additional")
+ORDER_LINUX=("xtext" "plantuml" "kermeta" "misc" "emoflon-headless" "emoflon" "theme" "additional")
 
 #
 # Configure OS specific details
@@ -96,7 +96,8 @@ install_packages () {
 	$ECLIPSE_BIN_PATH -nosplash \
 			-application org.eclipse.equinox.p2.director \
 			-repository "$1" \
-			-installIU "$(parse_package_list $2)"
+			-installIU "$(parse_package_list $2)" \
+	| grep -v 'DEBUG'
 }
 
 # Displays the given input including "=> " on the console.
@@ -132,7 +133,7 @@ setup_emoflon_headless_local_updatesite () {
 	# Append local folder to path (has to be absolute and, therefore, dynamic)
 	if [[ ! -z ${GITHUB_WORKSPACE} ]] && [[ "$OS" = "windows" ]]; then
 		log "Using a Github-hosted runner on Windows."
-		UPDATESITES+=",file:/D:/a/emoflon-ibex-eclipse-build/emoflon-ibex-eclipse-build/tmp/emoflon-headless/"
+		UPDATESITES+=",file:/D:/a/emoflon-neo-eclipse-build/emoflon-neo-eclipse-build/tmp/emoflon-headless/"
 	elif [[ "$OS" = "linux" ]]; then
 		log "Using a runner on Linux."
 		UPDATESITES+=",file://$PWD/tmp/emoflon-headless/"
@@ -179,7 +180,7 @@ install_global_eclipse_settings () {
 # Remove all configured update sites
 remove_update_sites () {
 	log "Remove all update sites."
-	UPDATE_SITE_CONFIG_PATH="$ECLIPSE_BASE_PATH/p2/org.eclipse.equinox.p2.engine/profileRegistry/epp.package.modeling.profile/.data/.settings"
+	UPDATE_SITE_CONFIG_PATH="$ECLIPSE_BASE_PATH/p2/org.eclipse.equinox.p2.engine/profileRegistry/epp.package.dsl.profile/.data/.settings"
 	UPDATE_SITE_METADATA="org.eclipse.equinox.p2.metadata.repository.prefs"
 	UPDATE_SITE_ARTIFACT="org.eclipse.equinox.p2.artifact.repository.prefs"
 
@@ -222,9 +223,9 @@ setup_emoflon_headless_local_updatesite
 log "Clean-up Eclipse folder and extract downloaded archive."
 rm -rf ./eclipse/*
 if [[ "$OS" = "linux" ]]; then
-	tar -xzf eclipse-modeling-$VERSION-R-linux-gtk-x86_64.tar.gz
+	tar -xzf $ARCHIVE_FILE_LINUX
 elif [[ "$OS" = "windows" ]]; then
-	unzip -qq -o eclipse-modeling-$VERSION-R-win32-x86_64.zip
+	unzip -qq -o $ARCHIVE_FILE_WINDOWS
 elif [[ "$OS" = "macos" ]]; then
 	7z x $ARCHIVE_FILE_MACOS
 	# Rename folder because "Eclipse" is inconsistent
