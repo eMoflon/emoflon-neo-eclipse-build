@@ -7,7 +7,7 @@
 ECLIPSE_ARCHIVE=eclipse-emoflon-windows-dev # Name of the archive to download
 FORCE_DOWNLOAD=0                            # 1 = force download of new archive
 TARGET_DIR=$1                               # Target directory
-API_URL="https://api.github.com/repos/maxkratz/emoflon-neo-eclipse-build/releases/latest"
+API_URL="https://api.github.com/repos/eMoflon/emoflon-neo-eclipse-build/releases/latest"
 
 set -e
 START_PWD=$PWD
