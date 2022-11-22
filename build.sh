@@ -102,6 +102,21 @@ install_packages () {
 	set +o pipefail
 }
 
+# Uninstalls a given list of packages.
+uninstall_packages () {
+	if [[ "$OS" = "macos" ]]; then
+		chmod +x $ECLIPSE_BIN_PATH
+	fi
+
+	set -o pipefail
+	$ECLIPSE_BIN_PATH -nosplash \
+			-application org.eclipse.equinox.p2.director \
+			-repository "$1" \
+			-uninstallIU "$(parse_package_list $2)" \
+	| grep -v 'DEBUG'
+	set +o pipefail
+}
+
 # Displays the given input including "=> " on the console.
 log () {
 	echo "=> $1"
@@ -262,6 +277,13 @@ for p in ${ORDER[@]}; do
 		log "Skipping plug-in: $p."
 		continue
 	fi
+
+	# Check if Xtext (old version) must be uninstalled first.
+	if [[ "$p" = "xtext" ]]; then
+		log "Uninstalling plug-in: $p."
+		uninstall_packages "$UPDATESITES" "./packages/$p-uninstall-packages.list"
+	fi
+
 	log "Installing plug-in: $p."
 	install_packages "$UPDATESITES" "./packages/$p-packages.list"
 done
