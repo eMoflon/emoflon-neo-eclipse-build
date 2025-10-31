@@ -279,7 +279,7 @@ jobs:
 
   # Create a release if running on tag
   create-release:
-    needs: [build-linux-user, build-linux-user-ci, build-macos-user, build-windows-user]
+    needs: [build-linux-user, build-linux-user-ci, build-macos-user, build-macos-arm-user, build-windows-user]
     runs-on: [ubuntu-22.04]
     # Only run on pushed tags (and explicitely ignore scheduled runs)
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/') && github.event_name != 'schedule'
