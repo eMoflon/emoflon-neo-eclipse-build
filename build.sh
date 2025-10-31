@@ -113,7 +113,7 @@ install_packages () {
 
 # Uninstalls a given list of packages.
 uninstall_packages () {
-	if [[ "$OS" = "macos" ]]; then
+	if [[ "$OS" = "macos" ]] || [[ "$OS" = "macosarm" ]]; then
 		chmod +x $ECLIPSE_BIN_PATH
 	fi
 
