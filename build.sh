@@ -29,9 +29,11 @@ VERSION=$VERSION # version comes from the CI env
 ARCHIVE_FILE_LINUX="eclipse-dsl-$VERSION-R-linux-gtk-x86_64.tar.gz"
 ARCHIVE_FILE_WINDOWS="eclipse-dsl-$VERSION-R-win32-x86_64.zip"
 ARCHIVE_FILE_MACOS="eclipse-dsl-$VERSION-R-macosx-cocoa-x86_64.dmg"
+ARCHIVE_FILE_MACOSARM="eclipse-dsl-$VERSION-R-macosx-cocoa-aarch64.dmg"
 OUTPUT_FILE_PREFIX_LINUX="eclipse-emoflon-linux"
 OUTPUT_FILE_PREFIX_WINDOWS="eclipse-emoflon-windows"
 OUTOUT_FILE_PREFIX_MACOS="eclipse-emoflon-macos"
+OUTOUT_FILE_PREFIX_MACOSARM="eclipse-emoflon-macos-arm"
 MIRROR="https://ftp.fau.de"
 UPDATESITES="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/,https://hallvard.github.io/plantuml/,https://www.kermeta.org/k2/update,https://www.genuitec.com/updates/devstyle/ci/,https://download.eclipse.org/releases/$VERSION,https://www.codetogether.com/updates/ci/,http://update.eclemma.org/,https://pmd.github.io/pmd-eclipse-plugin-p2-site/,https://checkstyle.org/eclipse-cs-update-site/,https://spotbugs.github.io/eclipse/,https://emoflon.org/emoflon-neo-updatesite/snapshot/"
 EMOFLON_HEADLESS_SRC="https://api.github.com/repos/eMoflon/emoflon-headless/releases/latest"
@@ -68,6 +70,13 @@ elif [[ "$OS" = "macos" ]]; then
 	ORDER=("${ORDER_LINUX[@]}")
 	ECLIPSE_BIN_PATH="./eclipse/Eclipse.app/Contents/MacOS/eclipse"
 	ECLIPSE_BASE_PATH="./eclipse/Eclipse.app/Contents/Eclipse"
+elif [[ "$OS" = "macosarm" ]]; then
+	ARCHIVE_FILE=$ARCHIVE_FILE_MACOSARM
+	OUTPUT_FILE_PREFIX=$OUTOUT_FILE_PREFIX_MACOSARM
+	# Lets try with linux install order
+	ORDER=("${ORDER_LINUX[@]}")
+	ECLIPSE_BIN_PATH="./eclipse/Eclipse.app/Contents/MacOS/eclipse"
+	ECLIPSE_BASE_PATH="./eclipse/Eclipse.app/Contents/Eclipse"
 else
 	echo "=> OS $OS not known."
 	exit 1
@@ -89,7 +98,7 @@ parse_package_list () {
 
 # Installs a given list of packages from a given update site.
 install_packages () {
-	if [[ "$OS" = "macos" ]]; then
+	if [[ "$OS" = "macos" ]] || [[ "$OS" = "macosarm" ]]; then
 		chmod +x $ECLIPSE_BIN_PATH
 	fi
 
@@ -150,14 +159,14 @@ setup_emoflon_headless_local_updatesite () {
 	# Append local folder to path (has to be absolute and, therefore, dynamic)
 	if [[ ! -z ${GITHUB_WORKSPACE} ]] && [[ "$OS" = "windows" ]]; then
 		log "Using a Github-hosted runner on Windows."
-		UPDATESITES+=",file:/D:/a/emoflon-neo-eclipse-build/emoflon-neo-eclipse-build/tmp/emoflon-headless/"
+		UPDATESITES+=",file:/$GITHUB_WORKSPACE/tmp/emoflon-headless/"
 	elif [[ "$OS" = "linux" ]]; then
 		log "Using a runner on Linux."
 		UPDATESITES+=",file://$PWD/tmp/emoflon-headless/"
 	elif [[ "$OS" = "windows" ]]; then
 		log "Using a runner on Windows."
 		UPDATESITES+=",file://$(echo $PWD | sed -e 's/\/mnt\///g' | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')\tmp\emoflon-headless\\"
-	elif [[ "$OS" = "macos" ]]; then
+	elif [[ "$OS" = "macos" ]] || [[ "$OS" = "macosarm" ]]; then
 		log "Using a runner on macOS."
 		UPDATESITES+=",file://$PWD/tmp/emoflon-headless/"
 	fi
@@ -209,6 +218,15 @@ remove_update_sites () {
 }
 
 
+# Remove all currently known notification URLs.
+# https://github.com/eclipse-packaging/packages/issues/310#issuecomment-2919590417
+remove_notification_urls () {
+	log "Removing Eclipse notification URLs."
+	mkdir -p $ECLIPSE_BASE_PATH/configuration/org.eclipse.oomph.setup/
+	URL_FILE="notificationURIs.txt"
+	cp ./resources/$URL_FILE $ECLIPSE_BASE_PATH/configuration/org.eclipse.oomph.setup/$URL_FILE
+}
+
 #
 # Script
 #
@@ -240,11 +258,15 @@ setup_emoflon_headless_local_updatesite
 log "Clean-up Eclipse folder and extract downloaded archive."
 rm -rf ./eclipse/*
 if [[ "$OS" = "linux" ]]; then
-	tar -xzf $ARCHIVE_FILE_LINUX
+	tar -xzf eclipse-dsl-$VERSION-R-linux-gtk-x86_64.tar.gz --warning=no-unknown-keyword
 elif [[ "$OS" = "windows" ]]; then
 	unzip -qq -o $ARCHIVE_FILE_WINDOWS
 elif [[ "$OS" = "macos" ]]; then
 	7z x $ARCHIVE_FILE_MACOS
+	# Rename folder because "Eclipse" is inconsistent
+	mv Eclipse eclipse
+elif [[ "$OS" = "macosarm" ]]; then
+	7z x $ARCHIVE_FILE_MACOSARM
 	# Rename folder because "Eclipse" is inconsistent
 	mv Eclipse eclipse
 fi
@@ -259,7 +281,7 @@ for p in ${ORDER[@]}; do
 		log "Skipping plug-in: $p."
 		continue
 	fi
-	
+
 	# Check if Dark Theme packages must be skipped (for CI builds = completely headless).
 	if [[ "$p" = "theme" ]] && [[ $SKIP_THEME -eq 1 ]]; then
 		log "Skipping plug-in: $p."
@@ -302,6 +324,9 @@ else
 	log "Deploy custom splash image."
 	chmod +x splash.sh && ./splash.sh deploy $VERSION $ECLIPSE_BASE_PATH
 fi
+
+# Remove notification URLs
+remove_notification_urls
 
 log "Clean-up old archives and create new archive."
 rm -f ./$OUTPUT_FILE

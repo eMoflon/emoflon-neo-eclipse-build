@@ -4,12 +4,13 @@
 
 This repository is used to automatically build an Eclipse [eMoflon::Neo](https://github.com/eMoflon/emoflon-neo) environment.
 
-| Name                     | OS      | eMoflon installed  | Dark theme installed | Splash image       | Additional packages |
-|--------------------------|---------|--------------------|----------------------|--------------------|---------------------|
-| Eclipse eMoflon user     | Linux   | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
-| Eclipse eMoflon user CI  | Linux   | :heavy_check_mark: |                      |                    |                     |
-| Eclipse eMoflon user     | Windows | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
-| Eclipse eMoflon user     | macOS   | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
+| Name                     | OS          | eMoflon installed  | Dark theme installed | Splash image       | Additional packages |
+|--------------------------|-------------|--------------------|----------------------|--------------------|---------------------|
+| Eclipse eMoflon user     | Linux       | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
+| Eclipse eMoflon user CI  | Linux       | :heavy_check_mark: |                      |                    |                     |
+| Eclipse eMoflon user     | Windows     | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
+| Eclipse eMoflon user     | macOS       | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
+| Eclipse eMoflon user     | macOS (ARM) | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark:  |
 
 
 **Additional packages** are installed for every non-CI build.
