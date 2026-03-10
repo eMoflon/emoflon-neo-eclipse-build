@@ -35,7 +35,7 @@ OUTPUT_FILE_PREFIX_WINDOWS="eclipse-emoflon-windows"
 OUTPUT_FILE_PREFIX_MACOS="eclipse-emoflon-macos"
 OUTPUT_FILE_PREFIX_MACOSARM="eclipse-emoflon-macos-arm"
 MIRROR="https://ftp.fau.de"
-UPDATESITES="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/,https://hallvard.github.io/plantuml/,https://www.kermeta.org/k2/update,https://www.genuitec.com/updates/devstyle/ci/,https://download.eclipse.org/releases/$VERSION,https://www.codetogether.com/updates/ci/,http://update.eclemma.org/,https://pmd.github.io/pmd-eclipse-plugin-p2-site/,https://checkstyle.org/eclipse-cs-update-site/,https://spotbugs.github.io/eclipse/,https://emoflon.org/emoflon-neo-updatesite/snapshot/"
+UPDATESITES="https://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/,https://hallvard.github.io/plantuml/,https://www.kermeta.org/k2/update,https://www.genuitec.com/updates/devstyle/ci/,https://download.eclipse.org/releases/$VERSION,http://update.eclemma.org/,https://pmd.github.io/pmd-eclipse-plugin-p2-site/,https://checkstyle.org/eclipse-cs-update-site/,https://spotbugs.github.io/eclipse/,https://emoflon.org/emoflon-neo-updatesite/snapshot/"
 EMOFLON_HEADLESS_SRC="https://api.github.com/repos/eMoflon/emoflon-headless/releases/latest"
 
 # Import plug-in:
